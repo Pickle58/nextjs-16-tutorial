@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { cacheLife, cacheTag } from 'next/cache';
+import { connection } from 'next/server';
 
 // export const dynamic = "force-static";
 // export const revalidate = 30;
@@ -40,9 +41,10 @@ export default function BlogPage() {
 }
 
 async function LoadBlogList() {
-    "use cache";
-    cacheLife("minutes")
-    cacheTag("blog", "minutes")
+    // "use cache";
+    // cacheLife("minutes")
+    // cacheTag("blog", "minutes")
+    await connection()
     const data = await fetchQuery(api.posts.getPosts);
 
     return (
