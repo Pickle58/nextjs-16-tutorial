@@ -7,7 +7,6 @@ import { fetchQuery } from "convex/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { connection } from 'next/server';
 import { cacheLife, cacheTag } from 'next/cache';
 
 // export const dynamic = "force-static";
@@ -100,8 +99,4 @@ function SkeletonLoadingUi() {
             ))}
         </div>
     )
-}
-
-function hours(arg0: number): "default" {
-    throw new Error('Function not implemented.');
 }
