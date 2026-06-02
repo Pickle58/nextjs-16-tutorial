@@ -8,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { cacheLife, cacheTag } from 'next/cache';
-import { connection } from 'next/server';
 
 // export const dynamic = "force-static";
 // export const revalidate = 30;
@@ -33,18 +32,17 @@ export default function BlogPage() {
                 </p>
             </div>
 
-            {/* <Suspense fallback={<SkeletonLoadingUi />}> */}
+            <Suspense fallback={<SkeletonLoadingUi />}>
                 <LoadBlogList />
-            {/* </Suspense> */}
+            </Suspense>
         </div>
     );
 }
 
 async function LoadBlogList() {
-    // "use cache";
-    // cacheLife("minutes")
-    // cacheTag("blog", "minutes")
-    await connection()
+    "use cache";
+    cacheLife("minutes");
+    cacheTag("blog", "minutes");
     const data = await fetchQuery(api.posts.getPosts);
 
     return (
