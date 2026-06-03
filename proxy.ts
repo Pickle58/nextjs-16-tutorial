@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth/cookies";
+import { isAuthenticated } from "@/lib/auth-server";
 
 export async function proxy(request: NextRequest) {
-	const sessionCookie = getSessionCookie(request);
-
-    // THIS IS NOT SECURE!
-    // This is the recommended approach to optimistically redirect users
-    // We recommend handling auth checks in each page/route
-	if (!sessionCookie) {
-		return NextResponse.redirect(new URL("/auth/login", request.url));
+	// Convex + Better Auth uses a JWT cookie (convex_jwt), not the default
+	// better-auth session_token that getSessionCookie checks by default.
+	if (!(await isAuthenticated())) {
+		const loginUrl = new URL("/auth/login", request.url);
+		loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+		return NextResponse.redirect(loginUrl);
 	}
 
 	return NextResponse.next();
