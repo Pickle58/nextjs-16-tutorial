@@ -9,7 +9,6 @@ import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { PostPresence } from '@/components/web/PostPresence';
 
 interface PostIdRouteProps {
@@ -39,21 +38,15 @@ export default async function PostIdRoute({ params }: PostIdRouteProps) {
     const { postId } = await params;
 
 
-    const token  = await getToken();
+    const token = await getToken();
 
     const [post, preloadedComments, userId] = await Promise.all([
-     await fetchQuery(api.posts.getPostById, { postId }),
-     await preloadQuery(api.comments.getCommentsByPostId,
-        {
-            postId: postId,
-        }),
-        await fetchQuery(api.presence.getUserId, {}, { token }),
+      fetchQuery(api.posts.getPostById, { postId }),
+      preloadQuery(api.comments.getCommentsByPostId, { postId }),
+      token
+        ? fetchQuery(api.presence.getUserId, {}, { token })
+        : Promise.resolve(null),
     ]);
-
-    if (!userId) {
-        redirect("/auth/login");
-    }
-
 
     if (!post) {
         return (
