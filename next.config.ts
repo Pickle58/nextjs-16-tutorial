@@ -10,10 +10,9 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
       {
-        hostname: 'courteous-goshawk-449.convex.cloud',
-        protocol: 'https',
-        port: '',
-      }
+        protocol: "https",
+        hostname: "*.convex.cloud",
+      },
     ],
   },
 };
